@@ -3,7 +3,7 @@ services:
     name: oracle-master-planner-api
     runtime: python
     buildCommand: "pip install poetry && poetry install"
-    startCommand: "uvicorn oracle_master_planner.main:app --host 0.0.0.0 --port 8000"
+    startCommand: "ls -R . && uvicorn oracle_master_planner.main:app --host 0.0.0.0 --port 8000"
     envVars:
       - key: PYTHONPATH
         value: /app/src

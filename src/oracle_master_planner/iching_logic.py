@@ -1,5 +1,15 @@
 import random
-from .iching_data import HEXAGRAMS
+import json
+import os
+
+# Construct the absolute path to the data file
+# This makes the loading process independent of the current working directory
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+_data_path = os.path.join(_current_dir, "iching_data.json")
+
+with open(_data_path, 'r') as f:
+    HEXAGRAMS = json.load(f)
+
 
 def cast_line():
     """ Simulates the casting of three coins to determine a single line. """

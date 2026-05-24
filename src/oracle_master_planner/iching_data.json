@@ -10,22 +10,15 @@
     "number": 2,
     "name": "The Receptive",
     "chinese_name": "\u5764",
-    "judgement": "The Receptive brings about sublime success, furthering through the perseverance of a mare. If the superior man undertakes something and tries to lead, he goes astray; but if he follows, he finds guidance. It is favorable to find friends in the west and south, to forego friends in the east and north. Quiet perseverance brings good fortune.",
+    "judgement": "The Receptive brings about sublime success, furthering through the perseverance of a mare.",
     "image": "The earth's condition is receptive devotion. Thus the superior man of broad character carries the outer world."
   },
-  "001000": {
-    "number": 7,
-    "name": "The Army",
-    "chinese_name": "\u5e2b",
-    "judgement": "The army. The army needs perseverance and a strong man. Good fortune without blame.",
-    "image": "In the middle of the earth is water: the image of the army. Thus the superior man increases his masses by generosity toward the people."
-  },
-  "100001": {
-    "number": 63,
-    "name": "After Completion",
-    "chinese_name": "\u65e2\u6fdf",
-    "judgement": "After Completion. Success in small matters. Perseverance furthers. At the beginning good fortune, at the end disorder.",
-    "image": "Water over fire: the image of the condition of After Completion. Thus the superior man takes thought of misfortune and arms himself against it in advance."
+  "100010": {
+    "number": 3,
+    "name": "Difficulty at the Beginning",
+    "chinese_name": "\u5c6f",
+    "judgement": "Difficulty at the Beginning works sublime success, furthering through perseverance. Nothing should be undertaken. It furthers one to appoint helpers.",
+    "image": "Clouds and thunder: the image of Difficulty at the Beginning. Thus the superior man brings order out of confusion."
   },
   "010001": {
     "number": 64,

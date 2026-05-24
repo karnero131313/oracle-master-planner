@@ -2,49 +2,49 @@ import random
 import json
 import os
 
-# Construct the absolute path to the data file
-_current_dir = os.path.dirname(os.path.abspath(__file__))
-_data_path = os.path.join(_current_dir, "iching_data.json")
+def load_hexagrams():
+    # Attempt multiple structural lookups to guarantee discovery across virtual runtimes
+    possible_paths = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "iching_data.json"),
+        os.path.join(os.getcwd(), "src", "oracle_master_planner", "iching_data.json"),
+        os.path.join(os.getcwd(), "iching_data.json")
+    ]
+    
+    for path in possible_paths:
+        if os.path.exists(path):
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception:
+                continue
+    return {}
 
-with open(_data_path, 'r') as f:
-    HEXAGRAMS = json.load(f)
+HEXAGRAMS = load_hexagrams()
 
 def cast_line():
-    """ Simulates the casting of three coins to determine a single line. """
     return sum([random.choice([2, 3]) for _ in range(3)])
 
 def get_hexagram_from_lines(lines):
-    """ Determines the hexagram from a list of six line values (6,7,8,9). """
-    # Convert line values to binary: 7,9 (yang) -> 1; 6,8 (yin) -> 0
-    key = "".join(['1' if line in [7, 9] else '0' for line in lines])
-    
-    # Try the clean key first; if it misses, try the reversed key as an infrastructure safety valve
-    return HEXAGRAMS.get(key) or HEXAGRAMS.get(key[::-1]) or {"name": "Unknown", "judgement": "", "image": ""}
+    key = "".join(['1' if int(line) in [7, 9] else '0' for line in lines])
+    # Bidirectional safety lookup fallback
+    return HEXAGRAMS.get(key) or HEXAGRAMS.get(key[::-1]) or {"name": f"Unknown Key ({key})", "judgement": "", "image": ""}
 
 def get_changing_lines(lines):
-    """ Identifies changing lines (6s and 9s). """
-    changing = []
-    for i, val in enumerate(lines):
-        if val == 6 or val == 9:
-            changing.append(i + 1)
-    return changing
+    return [i + 1 for i, val in enumerate(lines) if int(val) in [6, 9]]
 
 def get_future_hexagram_from_lines(lines):
-    """ Determines the future hexagram based on the changing lines. """
     future_lines = []
     for val in lines:
-        if val == 6:
-            future_lines.append(7) # Changing Yin becomes Yang
-        elif val == 9:
-            future_lines.append(8) # Changing Yang becomes Yin
+        if int(val) == 6:
+            future_lines.append(7)
+        elif int(val) == 9:
+            future_lines.append(8)
         else:
-            future_lines.append(val)
+            future_lines.append(int(val))
     return get_hexagram_from_lines(future_lines)
 
 def perform_divination(question: str):
-    """ Performs a full I Ching divination. """
     lines = [cast_line() for _ in range(6)]
-
     primary_hexagram = get_hexagram_from_lines(lines)
     changing_lines_indices = get_changing_lines(lines)
 
@@ -58,7 +58,6 @@ def perform_divination(question: str):
     if changing_lines_indices:
         result["future_hexagram"] = get_future_hexagram_from_lines(lines)
     else:
-        # Fallback to avoid null outputs if no lines change naturally
         result["future_hexagram"] = primary_hexagram
 
     return result

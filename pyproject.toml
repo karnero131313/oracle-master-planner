@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Oracle and Calendar Master Planner"
 authors = ["AgentSon"]
 packages = [{include = "oracle_master_planner", from = "src"}]
+include = ["src/oracle_master_planner/iching_data.py"]
 
 [tool.poetry.dependencies]
 python = "^3.11"

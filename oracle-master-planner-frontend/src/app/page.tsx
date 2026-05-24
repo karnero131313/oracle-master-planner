@@ -27,7 +27,8 @@ export default function Home() {
     setResult(null);
 
     try {
-      const response = await fetch("/api/v1/divine", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+      const response = await fetch(`${apiUrl}/api/v1/divine`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),

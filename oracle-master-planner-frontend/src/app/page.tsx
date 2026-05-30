@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 
-function MasterOracleDashboard() {
+export default function MasterOracleDashboard() {
   const [activeTab, setActiveTab] = useState<'personal' | 'business'>('personal');
   const [focusContext, setFocusContext] = useState('career');
   const [timeScope, setTimeScope] = useState('weekly');
 
+  // Input States
   const [name, setName] = useState('');
   const [birthDay, setBirthDay] = useState('10');
   const [birthMonth, setBirthMonth] = useState('04');
@@ -27,12 +28,12 @@ function MasterOracleDashboard() {
   const [result, setResult] = useState<any>(null);
 
   const months = [
-    { value: '01', label: 'January' }, { value: '02', label: 'February' },
-    { value: '03', label: 'March' }, { value: '04', label: 'April' },
-    { value: '05', label: 'May' }, { value: '06', label: 'June' },
-    { value: '07', label: 'July' }, { value: '08', label: 'August' },
-    { value: '09', label: 'September' }, { value: '10', label: 'October' },
-    { value: '11', label: 'November' }, { value: '12', label: 'December' }
+    { value: '01', label: 'Jan' }, { value: '02', label: 'Feb' },
+    { value: '03', label: 'Mar' }, { value: '04', label: 'Apr' },
+    { value: '05', label: 'May' }, { value: '06', label: 'Jun' },
+    { value: '07', label: 'Jul' }, { value: '08', label: 'Aug' },
+    { value: '09', label: 'Sep' }, { value: '10', label: 'Oct' },
+    { value: '11', label: 'Nov' }, { value: '12', label: 'Dec' }
   ];
 
   const handleCalculate = async (e: React.FormEvent) => {
@@ -56,147 +57,89 @@ function MasterOracleDashboard() {
           corporate: { entityName, incorporationDate: cDate, registrationTime, headquartersLocation }
         }),
       });
-
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      console.error(err);
-      alert('Error calculating matrix.');
+      alert('Error connecting to engine.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main style={{ maxWidth: '950px', margin: '30px auto', padding: '25px', color: '#fff', background: '#000', borderRadius: '16px', border: '1px solid #222' }}>
+    <main style={{ maxWidth: '900px', margin: '20px auto', padding: '20px', color: '#fff', background: '#000', fontFamily: 'sans-serif' }}>
+      <h2 style={{ textAlign: 'center', color: '#0070f3' }}>Master Oracle Planner</h2>
       
-      <header style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <h1 style={{ fontSize: '32px', margin: '0' }}>Master Oracle Planner</h1>
-        <p style={{ color: '#666', fontSize: '13px', textTransform: 'uppercase' }}>Temporal Forecasting Node</p>
-      </header>
-
-      <div style={{ display: 'flex', gap: '8px', background: '#111', padding: '6px', borderRadius: '8px', marginBottom: '25px' }}>
-        <button type="button" onClick={() => { setActiveTab('personal'); setResult(null); }} style={{ flex: 1, padding: '10px', background: activeTab === 'personal' ? '#222' : 'transparent', color: '#fff', border: 'none', cursor: 'pointer' }}>
-          ✨ Personal Genesis
-        </button>
-        <button type="button" onClick={() => { setActiveTab('business'); setResult(null); }} style={{ flex: 1, padding: '10px', background: activeTab === 'business' ? '#222' : 'transparent', color: '#fff', border: 'none', cursor: 'pointer' }}>
-          🏛️ Corporate Egregore
-        </button>
+      {/* Tab Selectors */}
+      <div style={{ display: 'flex', gap: '10px', margin: '20px 0' }}>
+        <button type="button" onClick={() => setActiveTab('personal')} style={{ flex: 1, padding: '10px', background: activeTab === 'personal' ? '#222' : '#111', color: '#fff', border: '1px solid #333' }}>✨ Personal Genesis</button>
+        <button type="button" onClick={() => setActiveTab('business')} style={{ flex: 1, padding: '10px', background: activeTab === 'business' ? '#222' : '#111', color: '#fff', border: '1px solid #333' }}>🏛️ Corporate Egregore</button>
       </div>
 
       <form onSubmit={handleCalculate} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        
-        {activeTab === 'personal' && (
-          <div style={{ background: '#0c0c0c', padding: '20px', borderRadius: '12px', border: '1px solid #222' }}>
-            <h3 style={{ margin: '0 0 15px 0' }}>Identity Parameters</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Full Birth Name</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={{ width: '100%', padding: '10px', background: '#111', color: '#fff', border: '1px solid #333' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Polarity Arc</label>
-                <select value={sex} onChange={(e) => setSex(e.target.value)} style={{ width: '100%', padding: '10px', background: '#111', color: '#fff', border: '1px solid #333' }}>
-                  <option value="Male">Solar (Male)</option>
-                  <option value="Female">Lunar (Female)</option>
-                </select>
-              </div>
-              <div style={{ gridColumn: '1 / span 2' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Timeline Incarnation</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px' }}>
-                  <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }}>
-                    {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d)}>Day {d}</option>)}
-                  </select>
-                  <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }}>
-                    {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-                  </select>
-                  <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }}>
-                    {Array.from({ length: 100 }, (_, i) => 2026 - i).map(y => <option key={y} value={String(y)}>{y}</option>)}
-                  </select>
-                  <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }} />
-                </div>
-              </div>
-              <div style={{ gridColumn: '1 / span 2' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Birth Station City/Country</label>
-                <input type="text" value={birthPlace} onChange={(e) => setBirthPlace(e.target.value)} required style={{ width: '100%', padding: '10px', background: '#111', color: '#fff', border: '1px solid #333' }} />
-              </div>
+        {activeTab === 'personal' ? (
+          <div style={{ border: '1px solid #222', padding: '15px' }}>
+            <label>Birth Name:</label>
+            <input type="text" value={name} onChange={e => setName(e.target.value)} required style={{ width: '100%', padding: '8px', margin: '5px 0 15px 0', background: '#111', color: '#fff' }} />
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '5px' }}>
+              <select value={birthDay} onChange={e => setBirthDay(e.target.value)} style={{ padding: '8px' }}>
+                {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d)}>Day {d}</option>)}
+              </select>
+              <select value={birthMonth} onChange={e => setBirthMonth(e.target.value)} style={{ padding: '8px' }}>
+                {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+              <select value={birthYear} onChange={e => setBirthYear(e.target.value)} style={{ padding: '8px' }}>
+                {Array.from({ length: 100 }, (_, i) => 2026 - i).map(y => <option key={y} value={String(y)}>{y}</option>)}
+              </select>
+              <input type="time" value={birthTime} onChange={e => setBirthTime(e.target.value)} style={{ padding: '8px' }} />
             </div>
+
+            <label style={{ display: 'block', marginTop: '15px' }}>Birthplace Node:</label>
+            <input type="text" value={birthPlace} onChange={e => setBirthPlace(e.target.value)} placeholder="City, Country" required style={{ width: '100%', padding: '8px', background: '#111', color: '#fff' }} />
+          </div>
+        ) : (
+          <div style={{ border: '1px solid #222', padding: '15px' }}>
+            <label>Venture Title:</label>
+            <input type="text" value={entityName} onChange={e => setEntityName(e.target.value)} required style={{ width: '100%', padding: '8px', margin: '5px 0 15px 0', background: '#111', color: '#fff' }} />
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '5px' }}>
+              <select value={incDay} onChange={e => setIncDay(e.target.value)} style={{ padding: '8px' }}>
+                {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d)}>Day {d}</option>)}
+              </select>
+              <select value={incMonth} onChange={e => setIncMonth(e.target.value)} style={{ padding: '8px' }}>
+                {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
+              <select value={incYear} onChange={e => setIncYear(e.target.value)} style={{ padding: '8px' }}>
+                {Array.from({ length: 50 }, (_, i) => 2026 - i).map(y => <option key={y} value={String(y)}>{y}</option>)}
+              </select>
+              <input type="time" value={registrationTime} onChange={e => setRegistrationTime(e.target.value)} style={{ padding: '8px' }} />
+            </div>
+
+            <label style={{ display: 'block', marginTop: '15px' }}>HQ Station:</label>
+            <input type="text" value={headquartersLocation} onChange={e => setHeadquartersLocation(e.target.value)} required style={{ width: '100%', padding: '8px', background: '#111', color: '#fff' }} />
           </div>
         )}
 
-        {activeTab === 'business' && (
-          <div style={{ background: '#0c0c0c', padding: '20px', borderRadius: '12px', border: '1px solid #222' }}>
-            <h3 style={{ margin: '0 0 15px 0' }}>Corporate Parameters</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              <div style={{ gridColumn: '1 / span 2' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Venture Name</label>
-                <input type="text" value={entityName} onChange={(e) => setEntityName(e.target.value)} required style={{ width: '100%', padding: '10px', background: '#111', color: '#fff', border: '1px solid #333' }} />
-              </div>
-              <div style={{ gridColumn: '1 / span 2' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Launch Target Timeline</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px' }}>
-                  <select value={incDay} onChange={(e) => setIncDay(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }}>
-                    {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d)}>Day {d}</option>)}
-                  </select>
-                  <select value={incMonth} onChange={(e) => setIncMonth(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }}>
-                    {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-                  </select>
-                  <select value={incYear} onChange={(e) => setIncYear(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }}>
-                    {Array.from({ length: 50 }, (_, i) => 2026 - i).map(y => <option key={y} value={String(y)}>{y}</option>)}
-                  </select>
-                  <input type="time" value={registrationTime} onChange={(e) => setRegistrationTime(e.target.value)} style={{ padding: '10px', background: '#111', color: '#fff' }} />
-                </div>
-              </div>
-              <div style={{ gridColumn: '1 / span 2' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#888' }}>Headquarters Location</label>
-                <input type="text" value={headquartersLocation} onChange={(e) => setHeadquartersLocation(e.target.value)} required style={{ width: '100%', padding: '10px', background: '#111', color: '#fff', border: '1px solid #333' }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div style={{ background: '#0c0c0c', padding: '20px', borderRadius: '12px' }}>
-          <h3 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#888' }}>Temporal Matrix Scale</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-            {[
-              { id: 'snapshot', name: '⚡ Core Instant Arc' },
-              { id: 'weekly', name: '📅 1-Week Horizon' },
-              { id: 'monthly', name: '🌙 Monthly Cycle' }
-            ].map(t => (
-              <div key={t.id} onClick={() => setTimeScope(t.id)} style={{ padding: '12px', background: timeScope === t.id ? '#222' : '#111', border: timeScope === t.id ? '1px solid #fff' : '1px solid #333', cursor: 'pointer', textAlign: 'center', borderRadius: '6px' }}>
-                <div style={{ fontSize: '13px' }}>{t.name}</div>
-              </div>
+        {/* Horizons selector */}
+        <div style={{ background: '#111', padding: '15px' }}>
+          <h4>Temporal Forecast Scale</h4>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {[['snapshot', '⚡ Snapshot Arc'], ['weekly', '📅 1-Week Horizon'], ['monthly', '🌙 Monthly Cycle']].map(([id, label]) => (
+              <button key={id} type="button" onClick={() => setTimeScope(id)} style={{ flex: 1, padding: '10px', background: timeScope === id ? '#fff' : '#222', color: timeScope === id ? '#000' : '#fff' }}>{label}</button>
             ))}
           </div>
         </div>
 
-        <div style={{ background: '#0c0c0c', padding: '20px', borderRadius: '12px' }}>
-          <h3 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#888' }}>Intent Target Focus Vector</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '15px' }}>
+        {/* Focus Sector Vector */}
+        <div style={{ background: '#111', padding: '15px' }}>
+          <h4>Intent Focus Vector</h4>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
             {[
-              { id: 'career', title: '💼 Career & Capital' },
-              { id: 'relationship', title: '❤️ Alliances & Synastry' },
-              { id: 'spiritual', title: '👁️ Karmic Path Matrix' },
-              { id: 'crisis', title: '🔥 Hazard Mitigation' }
-            ].map((item) => (
-              <div key={item.id} onClick={() => setFocusContext(item.id)} style={{ padding: '12px', background: focusContext === item.id ? '#222' : '#111', border: focusContext === item.id ? '1px solid #fff' : '1px solid #333', cursor: 'pointer', borderRadius: '6px' }}>
-                <span style={{ fontSize: '13px' }}>{item.title}</span>
-              </div>
+              { id: 'career', name: '💼 Career/Venture' }, { id: 'relationship', name: '❤️ Alliances/Synastry' },
+              { id: 'spiritual', name: '👁️ Spiritual Path' }, { id: 'crisis', name: '🔥 Hazard Mitigation' }
+            ].map(f => (
+              <button key={f.id} type="button" onClick={() => setFocusContext(f.id)} style={{ padding: '10px', background: focusContext === f.id ? '#fff' : '#222', color: focusContext === f.id ? '#000' : '#fff' }}>{f.name}</button>
             ))}
           </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', color: '#555' }}>Context Details</label>
-            <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Scenario specifications..." style={{ width: '100%', padding: '10px', background: '#111', color: '#fff', border: '1px solid #333' }} />
-          </div>
-        </div>
-
-        <button type="submit" disabled={loading} style={{ padding: '15px', background: '#fff', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-          {loading ? 'Fusing Matrices...' : 'Compute Universal Forecast'}
-        </button>
-      </form>
-
-      {result && result.matrix && (
-        <div style={{ marginTop: '40px', padding: '25px', background: '#0a0a0a', borderRadius: '12px', border: '1px solid #333' }}>
-          
-          {result.numerologyProfile && (
-            <div style={{ background: '#111', padding: '20px', borderRadius: '8px', marginBottom: '25px',
+          <input type="text" value={

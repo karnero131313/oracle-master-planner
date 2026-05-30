@@ -15,7 +15,13 @@ const calculateSevenMatrix = (seed: number) => {
 
   const numericalRoot = (digitsArray.reduce((a, b) => a + b, 0) % 9) || 9;
 
-  const paths = ['Kether-to-Chokmah', 'Chesed-to-Tiphereth', 'Netzach-to-Hod', 'Yesod-to-Malkuth', 'Gevurah-to-Tiphereth', 'Chokmah-to-Binah'];
+  const paths = [
+    'Kether-to-Chokmah (The Crown of Wisdom)', 
+    'Chesed-to-Tiphereth (The Conduit of Mercy)', 
+    'Netzach-to-Hod (Victory & Splendor Grid)', 
+    'Yesod-to-Malkuth (The Gate of Foundation)', 
+    'Gevurah-to-Tiphereth (The Altar of Severe Force)'
+  ];
   const kabbalahPath = paths[numericalRoot % paths.length];
 
   const westernAlignments: Record<string, string> = {};
@@ -31,42 +37,93 @@ const calculateSevenMatrix = (seed: number) => {
 
   Object.keys(westernPlanets).forEach((planet) => {
     const offset = Math.floor(seed * (westernPlanets[planet as keyof typeof westernPlanets] + 1));
-    westernAlignments[planet] = `${planet} in ${getZodiacSign(offset)} (${offset % 12 >= 6 ? 'Direct' : 'Retrograde'})`;
+    westernAlignments[planet] = `${planet} in ${getZodiacSign(offset)} (${offset % 12 >= 6 ? 'Direct Placement' : 'Retrograde Anchor'})`;
   });
 
   Object.keys(vedicPlanets).forEach((planet) => {
     const offset = Math.floor(seed * (vedicPlanets[planet as keyof typeof vedicPlanets] + 1));
-    vedicAlignments[planet] = `${planet} in ${getZodiacSign(offset + 3)} (Kendra House ${Math.abs(offset % 12) + 1})`;
+    vedicAlignments[planet] = `${planet} in ${getZodiacSign(offset + 2)} (Bhava House ${Math.abs(offset % 12) + 1})`;
   });
 
-  const tarotCards = ['The Magician', 'The High Priestess', 'The Empress', 'The Emperor', 'The Hierophant', 'The Lovers', 'The Chariot', 'Justice'];
-  const tarotDistribution = `${tarotCards[numericalRoot % tarotCards.length]} / Axis Factor: ${digitsArray.slice(0, 2).join(':')}`;
+  const tarotCards = ['The Magician', 'The High Priestess', 'The Empress', 'The Emperor', 'The Hierophant', 'The Lovers', 'The Chariot', 'Justice', 'The Hermit'];
+  const tarotDistribution = `${tarotCards[numericalRoot % tarotCards.length]}`;
   
-  const ichingHexagrams = ['Hexagram 1: The Creative', 'Hexagram 2: The Receptive', 'Hexagram 11: Peace', 'Hexagram 63: After Completion'];
+  const ichingHexagrams = ['Hexagram 1: The Creative (Heaven)', 'Hexagram 2: The Receptive (Earth)', 'Hexagram 11: Harmony (Peace)', 'Hexagram 63: After Completion'];
   const ichingDistribution = ichingHexagrams[numericalRoot % ichingHexagrams.length];
   
-  const runes = ['Fehu (Wealth)', 'Uruz (Strength)', 'Ansuz (Wisdom)', 'Raidho (Journey)'];
-  const runesDistribution = `${runes[numericalRoot % runes.length]} in Present Node`;
+  const runes = ['Fehu (Abundance Flow)', 'Uruz (Vital Strength)', 'Ansuz (Divine Wisdom)', 'Raidho (The Journey Forward)'];
+  const runesDistribution = `${runes[numericalRoot % runes.length]}`;
 
   return { numericalRoot, kabbalahPath, westernAlignments, vedicAlignments, tarotDistribution, ichingDistribution, runesDistribution, digitsArray };
 };
 
 const generateEsotericInterpretation = (matrix: any, focusContext: string, query: string, mode: string) => {
   const root = matrix.numericalRoot;
-  
-  const interpretations: Record<string, Record<number, { summary: string; numerologyDetails: string; sortilegeDetails: string }>> = {
+
+  // PREMIUM INTELLECTUAL READOUT DATABASE MAP
+  const library: Record<string, Record<number, { summary: string; numerologyDetails: string; sortilegeDetails: string }>> = {
     career: {
-      1: { summary: "A singularity of initialization. A potent window for starting corporate structures or initiating independent execution loops.", numerologyDetails: "Digital Root 1 implies raw leadership energy. Gematria paths signal an inflow of visionary force down to material manifestation.", sortilegeDetails: "The Tarot card indicates you have all necessary resources directly in front of you. Build concrete foundations immediately." },
-      2: { summary: "A cycle requiring dual-alignment or strategic partnership vectors. Avoid solo actions at this juncture.", numerologyDetails: "Digital Root 2 anchors relational mathematics. Cooperation yields exponential gains compared to forced independent tracking.", sortilegeDetails: "The balance of binary forces suggests waiting for counterpart validation before committing operational capital." },
-      9: { summary: "Completion boundary reached. Cleanse legacy infrastructure loops to make room for high-scale enterprise evolutions.", numerologyDetails: "Root 9 indicates the absolute maximum accumulation of experience. The geometric trajectory forces structural release.", sortilegeDetails: "Final card arrays indicate a closing gate. Clear old debts or data backlogs before mapping the next epoch." }
+      1: {
+        summary: "A potent singularity of initialization. The cosmic architecture signals a green-light vector for building entirely new enterprise entities, asserting sovereign execution, and initiating structural independence. Breakthroughs occur by leaving outdated group paradigms behind.",
+        numerologyDetails: "Digital Root 1 brings raw pioneering energy. Combined with your Gematria Tree configurations, it demands that you draw an unmanifested, visionary blueprint straight down into physical reality through direct executive action.",
+        sortilegeDetails: "The manifestation matrix yields the active presence of your drawn Tarot card alongside the unmitigated movement of your current I Ching hexagram. This specific alignment issues a clear operational directive: initialize your venture immediately. Do not delay waiting for external consensus."
+      },
+      4: {
+        summary: "A phase requiring deliberate structural consolidation and rigid architectural discipline. Grand ideas must now pass a strict auditing index. Your venture's success is completely tethered to structural integrity, systematic scaling, and uncompromised compliance blueprints.",
+        numerologyDetails: "Digital Root 4 channels the dense geometric frequency of the cube and the anchor points of your Tree of Life path. This combination warns against loose, scattered exploration. True manifestation occurs solely through rigorous process organization and tracking infrastructure metrics.",
+        sortilegeDetails: "The synchronized presence of your sortilege keys demands complete operational patience. Align your daily execution rhythm perfectly with celestial transits. Safety and wealth accumulation are generated through iron-clad predictability and systematic execution loops."
+      },
+      6: {
+        summary: "An expansive vector of harmonic abundance, community stewardship, and enterprise system equilibrium. Your financial returns are intimately bound to service frameworks and optimization of interpersonal value pipelines. This is an ideal window for drafting high-scale B2B agreements or customer-facing operations.",
+        numerologyDetails: "Digital Root 6 centers your system on relational harmony, symmetrical distribution, and macro-responsibility. The active Tree of Life matrix balances severe market forces with stable internal protection mechanics.",
+        sortilegeDetails: "The unified deployment of your Tarot Arc and the Runic Field reveals a massive, stabilized foundation. Trust the systematic unfolding of your structural timelines. True corporate power at this specific junction emerges via cultivating unbreakable corporate trust and long-term organizational health."
+      }
+    },
+    relationship: {
+      4: {
+        summary: "The oracle matrix highlights a phase where emotional boundaries and long-term covenant architecture are actively tested. Casual dynamics are shifting toward structural requirements. True alignment occurs only when mutual accountability matrices match romantic ideals.",
+        numerologyDetails: "Digital Root 4 forces hidden structural vulnerabilities out into the open. Passing through your calculated Gematria conduit, it commands you to drop emotional projection loops and evaluate your alliances using clear, realistic frameworks.",
+        sortilegeDetails: "The unbending matrix of your sortilege results demands stability and internal quietude. Speak from a position of absolute personal integrity. Secure your relationship architecture against chaotic external noise by setting clear, healthy boundaries."
+      },
+      6: {
+        summary: "A profound cycle of natural synthesis, relational healing, and divine attraction patterns. The geometric alignment is opening a friction-free gateway for establishing deep soul covenants, settling legacy conflicts, and anchoring profound emotional safety.",
+        numerologyDetails: "Root 6 acts as a healing catalyst within your numeric footprint. It shifts your active Tree path away from defensive tracking and recalibrates your energetic field to radiate open, supportive, and balanced frequencies.",
+        sortilegeDetails: "Your Sortilege maps signal maximum harmony. Relational blockages are being cleared by supportive cosmic waves. Move forward with vulnerability, and trust that your current alliances are structurally safe and supported."
+      }
+    },
+    spiritual: {
+      4: {
+        summary: "A phase of intense karmic anchoring and practical mystical mastery. You are downloading vast, hyper-dimensional concepts and forcing them down into a routine of daily physical discipline. Spiritual illumination must be manifested through regular, structured devotion.",
+        numerologyDetails: "Digital Root 4 structures your spiritual altar. The specific geometry of your Tree path signals that spiritual insights are useless unless they are anchored within physical habits, meticulous study, and self-mastery.",
+        sortilegeDetails: "The I Ching spectrum indicates that lasting spiritual evolution is never flashy or chaotic. Real ascension occurs silently, step-by-step, through deliberate intention and unshakeable daily alignment."
+      },
+      6: {
+        summary: "An open portal of profound cosmic grace, internal heart-center activation, and unmitigated integration with universal laws. You are moving into deep alignment with your cosmic blueprint, allowing your intuition to bypass cognitive blocks.",
+        numerologyDetails: "Root 6 restores energetic symmetry to your spiritual system. It links your personal matrix directly to natural geometric patterns, transforming old spiritual suffering indicators into creative fuel and profound wisdom.",
+        sortilegeDetails: "The combined pull of your active Rune and Tarot vector signals complete cosmic validation. You are walking on your true path. Open your perceptions to receive clear guidance from the field."
+      }
+    },
+    crisis: {
+      4: {
+        summary: "The systematic bottleneck you are encountering stems directly from over-engineered processes or a complete loss of strategic flexibility. You have become trapped within an outdated rule matrix or a rigid operational structure that refuses to adapt to current market currents.",
+        numerologyDetails: "Under a crisis context, Root 4 acts as a warning indicator for structural stagnation. Your Tree path reveals that a lack of adaptability is causing system-wide stress. You must audit your operations and delete toxic bottlenecks.",
+        sortilegeDetails: "The Tarot arc suggests using structured logic and objective data to solve this crisis. Do not rely on emotional panic response loops. Methodically rebuild your vulnerable points to restore complete systemic safety."
+      },
+      6: {
+        summary: "Your current bottleneck involves a critical imbalance in your resource distribution pipelines or an emotional overload within your key alliances. You are expending vast amounts of energy fixing others' problems at the direct expense of your own systemic stability.",
+        numerologyDetails: "Root 6 in a crisis vector points to boundary collapses or compromised system symmetry. Your Gematria node demands that you immediately stop people-pleasing loops or unsustainable operational outflows.",
+        sortilegeDetails: "The Runic field orders an immediate return to internal balance. Pull your energy back from external conflicts, stabilize your home base or core assets, and execute a balanced strategy to clear the anomaly."
+      }
     }
   };
 
-  const contextMap = interpretations[focusContext] || interpretations['career'];
+  // ADVANCED CROSS-CONTEXT CONDUCTION FALLBACKS
+  // Dynamically weaves specific inputs right into the text if exact root index is unique
+  const contextMap = library[focusContext] || library['career'];
   return contextMap[root] || {
-    summary: `A balance of harmonic currents under Destiny Vector ${root}. The geometry suggests aligning individual action with celestial rhythms to break through your current ${focusContext} questions.`,
-    numerologyDetails: `Digital Root ${root} combined with the ${matrix.kabbalahPath} tree coordinates signals a stable foundation. Energy is consolidating structurally rather than scattering.`,
-    sortilegeDetails: `The synchronized pull of ${matrix.tarotDistribution} alongside ${matrix.ichingDistribution} demands internal quietude. Act through deliberate intention rather than panic response loops.`
+    summary: `A complex dynamic convergence is currently shaping your scenario. Under the calculation of Destiny Vector ${root}, this junction demands that you align your immediate tactical steps with your underlying cosmic blueprint. Your explicit query context indicates that standard, generic solutions will not resolve this—only tailored, strategic execution will break the bottleneck.`,
+    numerologyDetails: `Digital Root ${root} passing through your ${matrix.kabbalahPath} node demonstrates that your current signature is condensing into a highly specialized developmental arc. Energy is gathering beneath the surface, preparing for structural transformation.`,
+    sortilegeDetails: `The combined alignment of ${matrix.tarotDistribution} and the flow state of ${matrix.ichingDistribution} indicate that safety lies inside deep clarity. Act through deliberate intention rather than panic response loops.`
   };
 };
 
@@ -75,13 +132,15 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { mode, focusContext, query } = body;
     
-    const personal = body.personal || { name: '', birthDate: '', birthTime: '', birthPlace: '' };
+    const personal = body.personal || { name: '', birthDate: '', birthTime: '', birthPlace: '', sex: '' };
     const corporate = body.corporate || { entityName: '', incorporationDate: '', registrationTime: '', headquartersLocation: '' };
 
-    // Deterministic hashing of input parameters
-    const combinedStr = `${personal.name}${personal.birthDate}${personal.birthTime}${personal.birthPlace}${corporate.entityName}${corporate.incorporationDate}${corporate.registrationTime}${corporate.headquartersLocation}`;
+    const combinedStr = mode === 'business'
+      ? `${corporate.entityName}${corporate.incorporationDate}${corporate.registrationTime}${corporate.headquartersLocation}`
+      : `${personal.name}${personal.birthDate}${personal.birthTime}${personal.birthPlace}${personal.sex}`;
+
     const hash = crypto.createHash('sha256').update(combinedStr).digest('hex');
-    const seedInt = parseInt(hash.replace(/\D+/g, '').slice(0, 6) || '777777', 10);
+    const seedInt = parseInt(hash.replace(/\D+/g, '').slice(0, 6) || '888888', 10);
 
     const waveResult = harmonicWave((seedInt % 1000) * phi, 3);
     const matrixData = calculateSevenMatrix(waveResult);

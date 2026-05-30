@@ -1,113 +1,117 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-
-// Define types for our data structures
-interface Hexagram {
-  name: string;
-  judgement: string;
-  image: string;
-}
-
-interface DivinationResult {
-  question: string;
-  primary_hexagram: Hexagram;
-  changing_lines: number[];
-  future_hexagram: Hexagram | null;
-}
+import { useState } from 'react';
 
 export default function Home() {
-  const [question, setQuestion] = useState("");
-  const [result, setResult] = useState<DivinationResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState('');
+  const [system, setSystem] = useState('tarot');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
 
-  const handleCast = async () => {
-    if (!question.trim()) return;
-    setIsLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query) return alert('Please enter your question!');
+    
+    setLoading(true);
     setResult(null);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-      const response = await fetch(`${apiUrl}/api/v1/divine`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+      const res = await fetch('/api/oracle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, system }),
       });
-      if (!response.ok) {
-        throw new Error("The Oracle is silent at this moment.");
-      }
-      const data = await response.json();
+
+      if (!res.ok) throw new Error(`Server returned error: ${res.status}`);
+      const data = await res.json();
       setResult(data);
-    } catch (error) {
-      console.error(error);
-      // Here you could set an error state to display to the user
+    } catch (err) {
+      console.error(err);
+      alert('Failed to connect to the Oracle engine.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-900 text-slate-300 font-serif">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 text-center">
-        {!result && (
-          <>
-            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem] font-sans">
-              The Oracle
-            </h1>
-            <p className="text-2xl text-slate-400">
-              Quiet your mind, and ask.
-            </p>
-            <div className="w-full max-w-lg">
-              <textarea
-                className="w-full rounded-md border border-slate-700 bg-slate-800 p-4 text-lg text-white focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                rows={4}
-                placeholder="What weighs on your mind?"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                disabled={isLoading}
-              />
-              <button
-                className="mt-4 rounded-md bg-amber-600 px-8 py-3 text-lg font-semibold text-white transition hover:bg-amber-500 font-sans disabled:opacity-50"
-                onClick={handleCast}
-                disabled={isLoading}
-              >
-                {isLoading ? "Casting..." : "Cast the Reading"}
-              </button>
+    <main style={{ maxWidth: '600px', margin: '40px auto', padding: '20px', fontFamily: 'sans-serif', color: '#fff', background: '#000', borderRadius: '12px' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Oracle & Calendar Master Planner</h1>
+      
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <div>
+          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Ask the Oracle:</label>
+          <input 
+            type="text" 
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Enter your query..."
+            style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #444', backgroundColor: '#222', color: '#fff' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Choose Divination Matrix:</label>
+          <select 
+            value={system}
+            onChange={(e) => setSystem(e.target.value)}
+            style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #444', backgroundColor: '#222', color: '#fff' }}
+          >
+            <option value="tarot">Tarot Spread (3 Cards)</option>
+            <option value="iching">I Ching (6-Line Hexagram)</option>
+            <option value="runes">Runes Norns Timeline</option>
+          </select>
+        </div>
+
+        <button 
+          type="submit" 
+          disabled={loading}
+          style={{ padding: '12px', background: '#0070f3', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+        >
+          {loading ? 'Consulting the Cosmic Grid...' : 'Cast Reading'}
+        </button>
+      </form>
+
+      {result && (
+        <div style={{ marginTop: '30px', padding: '20px', background: '#111', color: '#fff', borderRadius: '8px', border: '1px solid #333' }}>
+          <h2 style={{ borderBottom: '1px solid #333', paddingBottom: '10px', marginTop: '0' }}>Oracle Response Matrix</h2>
+          
+          {/* TAROT DISPLAY MATRIX */}
+          {system === 'tarot' && result.cards && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '15px' }}>
+              {result.cards.map((card: any, idx: number) => (
+                <div key={idx} style={{ padding: '12px', borderLeft: '4px solid #0070f3', background: '#1c1c1c', borderRadius: '0 4px 4px 0' }}>
+                  <h3 style={{ margin: '0 0 5px 0' }}>{card.name} <span style={{ fontSize: '14px', color: '#aaa' }}>({card.orientation})</span></h3>
+                  <p style={{ margin: '0', color: '#ccc' }}>{card.description}</p>
+                </div>
+              ))}
             </div>
-          </>
-        )}
+          )}
 
-        {result && (
-          <div className="w-full max-w-2xl animate-fade-in">
-            <h2 className="text-lg text-slate-400">Your Question:</h2>
-            <p className="text-xl text-white mb-8">"{result.question}"</p>
-            
-            <h3 className="text-3xl font-bold text-amber-400">{result.primary_hexagram.name}</h3>
-            <p className="text-xl text-slate-300 mt-2 mb-4">"{result.primary_hexagram.judgement}"</p>
-            <p className="text-md text-slate-400 italic mb-8">{result.primary_hexagram.image}</p>
+          {/* I-CHING DISPLAY MATRIX */}
+          {system === 'iching' && (
+            <div style={{ marginTop: '15px' }}>
+              <h3>{result.hexagram}</h3>
+              <p style={{ fontFamily: 'monospace', color: '#0070f3', background: '#1c1c1c', padding: '6px', borderRadius: '4px' }}>Pattern Code: {result.binary}</p>
+              <p style={{ fontStyle: 'italic', marginTop: '10px', color: '#ccc' }}>Advisory: {result.advisory}</p>
+            </div>
+          )}
 
-            {result.future_hexagram && (
-              <>
-                <p className="text-amber-500 mb-4">Changing lines on {result.changing_lines.join(', ')} lead to...</p>
-                <h3 className="text-3xl font-bold text-amber-400">{result.future_hexagram.name}</h3>
-                <p className="text-xl text-slate-300 mt-2 mb-4">"{result.future_hexagram.judgement}"</p>
-                <p className="text-md text-slate-400 italic mb-8">{result.future_hexagram.image}</p>
-              </>
-            )}
-            
-            <button
-              className="mt-8 rounded-md bg-slate-700 px-8 py-3 text-lg font-semibold text-white transition hover:bg-slate-600 font-sans"
-              onClick={() => {
-                setResult(null);
-                setQuestion("");
-              }}
-            >
-              Ask Another Question
-            </button>
-          </div>
-        )}
-      </div>
+          {/* RUNES DISPLAY MATRIX */}
+          {system === 'runes' && result.norns && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '15px' }}>
+              {['urd', 'verdandi', 'skuld'].map((timeNode) => {
+                const node = result.norns[timeNode];
+                return (
+                  <div key={timeNode} style={{ padding: '12px', borderLeft: '4px solid #00ff7f', background: '#1c1c1c', borderRadius: '0 4px 4px 0' }}>
+                    <h3 style={{ margin: '0 0 5px 0' }}>{node.name}</h3>
+                    <p style={{ margin: '0', color: '#ccc' }}>Interpretation: {node.interpretation}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </main>
   );
 }
-

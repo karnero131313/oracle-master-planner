@@ -188,4 +188,11 @@ function MasterOracleDashboard() {
             ].map((item) => (
               <div key={item.id} onClick={() => setFocusContext(item.id)} style={{ padding: '18px', borderRadius: '12px', background: focusContext === item.id ? '#0d0e12' : '#080809', border: focusContext === item.id ? '1px solid #fff' : '1px solid #161618', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <span style={{ fontWeight: '500', fontSize: '14px', color: focusContext === item.id ? '#fff' : '#666' }}>{item.title}</span>
-                <span
+                <span style={{ fontSize: '11px', color: '#333', lineHeight: '1.4' }}>{item.desc}</span>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', color: '#555', textTransform: 'uppercase', marginBottom: '8px' }}>Focus Clarification Context</label>
+            <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Type specific
